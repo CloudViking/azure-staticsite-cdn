@@ -1,0 +1,76 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.1.0.3",
+    "parameters": {
+        "storageAccountName": {
+            "defaultValue": "[concat('site', uniqueString(resourceGroup().id))]",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the storage account endpoint. To use the default value, do not specify your own value."
+            }
+        },
+        "cdnProfileName": {
+            "defaultValue": "[concat('cdn-profile-', parameters('storageAccountName'))]",
+            "type": "String",
+            "metadata": {
+                "description": "Name of the CDN profile. To use the default value, do not specify your own value."
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            
+            "type": "Microsoft.Cdn/profiles",
+            "sku": {
+                "name": "Standard_Microsoft"    
+            },
+            "name": "[parameters('cdnProfileName')]",
+            "apiVersion": "2017-10-12",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "provisioningState": "Succeeded",
+                "resourceState": "Active"
+            },
+            "dependsOn": []
+        },
+        {
+            
+            "type": "Microsoft.Storage/storageAccounts",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "StorageV2",
+            "name": "[parameters('storageAccountName')]",
+            "apiVersion": "2018-07-01",
+            "location": "[resourceGroup().location]",
+            "tags": {},
+            "scale": null,
+            "properties": {
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "accessTier": "Hot"
+            },
+            "dependsOn": []
+        }
+    ]
+}
