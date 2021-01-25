@@ -11,7 +11,7 @@ $logFile = "./teardown_$(get-date -format `"yyyyMMddhhmmsstt`").log"
 # Set preference variables
 $ErrorActionPreference = "Stop"
 
-# Obtain subbuilder resource group object
+# Obtain static website resource group object
 $rg = Get-AzResourceGroup -Name "$Name-rg" -ErrorAction SilentlyContinue
 if ($rg) {
     try {
