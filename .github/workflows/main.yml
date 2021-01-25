@@ -6,7 +6,8 @@ name: Upload Static Website to Blob Storage
 on:
   push:
     branches: [ master ]
-    paths: site-contents/
+    paths: 
+    - 'site-contents/**'
 
 jobs:
   build:
