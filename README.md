@@ -71,7 +71,7 @@ A small project to show how to host a static website out of Azure Storage, front
 
 
 ### Setting up GitHub Actions
-This project contains the `main.yml` file which will allow for the static site content to be deployed via Github Actions. The GitHub Action will login to Azure, upload static site contents to `$web` container in the defined storage account. This action will also flush the CDN Endpoints to ensure they all pick up the newest changes upon deployment. The Github Actions `main.yml` file has been written to use GitHub Secrets to keep the template flexible. You will need to add the following secrets to your GitHub Repo:
+This project contains the `main.yml` file which will allow for the static site content to be deployed via Github Actions. The GitHub Action will login to Azure, upload static site contents to `$web` container in the defined storage account. This action will also flush the CDN Endpoints to ensure they all pick up the newest changes upon deployment. The Github Actions `main.yml` file has been written to use GitHub Secrets to keep the template flexible. You will need to add the following secrets to your GitHub Repo (They will be output to the console after running the `deploy.ps1` script):
 
 **REQUIRED GITHUB SECRETS:**
 - AZURE_STATICSITE_CREDENTIALS
