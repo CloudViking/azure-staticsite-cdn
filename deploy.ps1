@@ -168,8 +168,8 @@ $cdnHost = ($cdn | ConvertFrom-Json).hostName
 Write-Host "INFO: Deployment is complete! If using GitHub Actions, please refer to the following values for GitHub secrets:" -ForegroundColor Green
 Write-Host "Resource Group Name: $Name-rg" -ForegroundColor Green
 Write-Host "Storage Account Name: $($Name)stgacct" -ForegroundColor Green
-Write-Host "Website URL via CDN: $cdnHost" -ForegroundColor Green
 Write-Host "CDN Profile Name: 'cdn-profile-$Name'" -ForegroundColor Green
 Write-Host "CDN Endpoint Name: $($Name)cdnendpoint" -ForegroundColor Green
+Write-Host "Static Site URL via CDN endpoint: $cdnHost" -ForegroundColor Green
 
 
