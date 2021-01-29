@@ -116,7 +116,7 @@ If($availability.NameAvailable) {
             Write-Verbose -Message "Uploading static website content to Storage Account: $($storageAccount.StorageAccountName)"
             Get-ChildItem `
                 -File `
-                -Path ./site-contents/ | `
+                -Path ./site-contents/* | `
                 ForEach-Object {
                 Set-AzStorageBlobContent `
                     -Container `$web `
@@ -142,16 +142,14 @@ If($availability.NameAvailable) {
     try {
         Write-Host "INFO: Creating CDN Endpoint for static website: $($storageAccount.PrimaryEndpoints.Web)" -ForegroundColor Green
         Write-Verbose -Message "INFO: Creating CDN Endpoint for static website: $($storageAccount.PrimaryEndpoints.Web)"
-        $ori = ($storageAccount.PrimaryEndpoints.Web -replace "https://").Trim('/')
-        $cdn = az cdn endpoint create `
-        -g "$Name-rg" `
-        -l "$location" `
-        -n "$($Name)cdnendpoint" `
-        --profile-name "cdn-profile-$Name" `
-        --origin "$ori" `
-        --origin-host-header "$ori" `
-        --enable-compression
-
+        $origin = ($storageAccount.PrimaryEndpoints.Web -replace "https://").Trim('/')
+        $cdn = New-AzCdnEndpoint `
+        -EndpointName "$($Name)cdnendpoint" `
+        -ProfileName "cdn-profile-$Name" `
+        -ResourceGroupName "$Name-rg" `
+        -Location "$location" `
+        -OriginName "cdnorigin" `
+        -OriginHostName "$origin"
     }
     catch {
         $_ | Out-File -FilePath $logFile -Append
@@ -164,12 +162,11 @@ Else {
     exit
 }
 
-$cdnHost = ($cdn | ConvertFrom-Json).hostName
-Write-Host "INFO: Deployment is complete! If using GitHub Actions, please refer to the following values for GitHub secrets:" -ForegroundColor Green
+Write-Host "INFO: Deployment is complete! If using GitHub Actions, please refer to the following values for GitHub secrets:" -ForegroundColor Cyan
 Write-Host "Resource Group Name: $Name-rg" -ForegroundColor Green
 Write-Host "Storage Account Name: $($Name)stgacct" -ForegroundColor Green
 Write-Host "CDN Profile Name: 'cdn-profile-$Name'" -ForegroundColor Green
 Write-Host "CDN Endpoint Name: $($Name)cdnendpoint" -ForegroundColor Green
-Write-Host "Static Site URL via CDN endpoint: $cdnHost" -ForegroundColor Green
+Write-Host "Static Site URL via CDN endpoint: https://$($cdn.HostName)" -ForegroundColor Cyan
 
 
