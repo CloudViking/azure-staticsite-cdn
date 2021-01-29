@@ -149,7 +149,8 @@ If($availability.NameAvailable) {
         -ResourceGroupName "$Name-rg" `
         -Location "$location" `
         -OriginName "cdnorigin" `
-        -OriginHostName "$origin"
+        -OriginHostName "$origin" `
+        -OriginHostHeader "$origin"
     }
     catch {
         $_ | Out-File -FilePath $logFile -Append
